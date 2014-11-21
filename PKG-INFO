@@ -1,0 +1,62 @@
+Metadata-Version: 1.0
+Name: fabric-virtualenv
+Version: 0.2.1
+Summary: Some additional functions for working with remote virtualenvs in Fabric.
+Home-page: http://pypi.python.org/pypi/fabric-virtualenv/
+Author: Daniel Pope
+Author-email: ext-dan.pope@vertu.com
+License: UNKNOWN
+Description: fabric-virtualenv - Fabric functions for working with remote virtualenvs
+        ========================================================================
+        
+        fabric-virtualenv provides Fabric functions for creating virtualenvs on remote
+        servers, as well as installing packages to them, and running other Fabric
+        operations in the context of the virtualenv.
+        
+        ``fabvenv.virtualenv(path)``
+        
+            A context manager that performs all nested operations in the context of the
+            virtualenv `path`.
+        
+            For example::
+        
+                >>> from fabvenv import virtualenv
+                >>> with virtualenv('/home/me/venv/'):
+                ...     run('python foo')
+        
+            It is highly recommended to use an absolute path, as Fabric's ``cd()``
+            contextmanager is always applied BEFORE ``virtualenv()``, regardless of how
+            they are nested.
+        
+        ``fabvenv.make_virtualenv(path, dependencies=[], eggs=[], system_site_packages=True)``
+        
+            Create or update a virtualenv in path, installing the given packages and eggs.
+        
+            * ``path`` - The path to the virtualenv. This path will be created if it
+                does not already exist.
+            * ``dependencies`` - a list of paths or URLs to Python packages to install
+                with ``pip``.
+            * ``eggs`` - a list of paths or URLs to eggs to install with
+                ``easy_install``. Eggs can be used to speed up deployments that require
+                libraries to be compiled.
+            * ``system_site_packages`` - If True, the newly-created virtualenv will
+                expose the system site package. If False, these will be hidden.
+        
+        ``fabvenv.prepare_virtualenv()``
+        
+            Ensure a version of the ``virtualenv`` command is available on the remote
+            server. If none exists, a standalone virtualenv.py script will be
+            downloaded from the virtualenv github and saved as ``~/virtualenv.py``.
+        
+            The virtualenv command that is prepared is available as ``env.virtualenv``.
+        
+        
+        Changelog
+        ---------
+        
+        * **0.2.1** - Fix bug in make_virtualenv with virtualenv.py installed by prepare_virtualenv.
+        
+        * **0.2.0** - make_virtualenv now updates ``system_site_packages`` flag on
+          previously-created virtualenvs.
+        
+Platform: UNKNOWN
