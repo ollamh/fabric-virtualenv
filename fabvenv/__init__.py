@@ -29,10 +29,18 @@ def virtualenv(path):
 
     """
     activate = posixpath.join(path, 'bin/activate')
-    if not exists(activate):
-        raise OSError("Cannot activate virtualenv %s" % path)
-    with prefix('. %s' % activate):
-        yield
+    if exists(activate):
+        with prefix('. %s' % activate):
+            yield
+        return
+
+    #Windows?
+    activate = posixpath.join(path, 'scripts/activate')
+    if exists(activate):
+        with prefix(activate):
+            yield
+        return
+    raise OSError("Cannot activate virtualenv %s" % path)
 
 
 def _wget(url, out):
